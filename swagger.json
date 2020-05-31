@@ -1,0 +1,321 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "COVID-19 API INFORMATION FROM JOHNS HOPKINS UNIVERSITY DATA",
+      "description": "Node.js  API to extract data related to Covid-19 from Johns Hopkins University "
+    },
+    "host": "localhost:4000",
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "Countries",
+        "description": "API for stats countries in the system"
+      }
+    ],
+    "schemes": [
+      "http"
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "paths": {
+      "/covid/country/{country}": {
+        "parameters": [
+          {
+            "name": "country",
+            "in": "path",
+            "required": true,
+            "description": "Name in english of the country with the first capital letter",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Countries"
+          ],
+          "summary": "Get all the information of a country",
+          "responses": {
+            "200": {
+              "description": "Country is found",
+              "schema": {
+                "$ref": "#/definitions/Countries"
+              }
+            },
+            "404": {
+                "description": "Country not found",
+                "schema": {
+                    "$ref": "#/definitions/Error"
+                  }
+            }
+          }
+        }
+      },
+      "/covid/confirmed/{country}": {
+        "parameters": [
+          {
+            "name": "country",
+            "in": "path",
+            "required": true,
+            "description": "Name in english of the country with the first capital letter",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Countries"
+          ],
+          "summary": "Get the number of confirmed cases of a country on the current date",
+          "responses": {
+            "200": {
+              "description": "Country is found",
+              "schema": {
+                "$ref": "#/definitions/Confirmed"
+              }
+            },
+            "404": {
+                "description": "Country not found",
+                "schema": {
+                    "$ref": "#/definitions/Error"
+                  }
+            }
+          }
+        }
+      },
+      "/covid/death/{country}": {
+        "parameters": [
+          {
+            "name": "country",
+            "in": "path",
+            "required": true,
+            "description": "Name in english of the country with the first capital letter",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Countries"
+          ],
+          "summary": "Get the number of deaths cases of a country on the current date",
+          "responses": {
+            "200": {
+              "description": "Country is found",
+              "schema": {
+                "$ref": "#/definitions/Deaths"
+              }
+            },
+            "404": {
+                "description": "Country not found",
+                "schema": {
+                    "$ref": "#/definitions/Error"
+                  }
+            }
+          }
+        }
+      },
+      "/covid/recovered/{country}": {
+        "parameters": [
+          {
+            "name": "country",
+            "in": "path",
+            "required": true,
+            "description": "Name in english of the country with the first capital letter",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Countries"
+          ],
+          "summary": "Get the number of recovered cases of a country on the current date",
+          "responses": {
+            "200": {
+              "description": "Country is found",
+              "schema": {
+                "$ref": "#/definitions/Recovered"
+              }
+            },
+            "404": {
+                "description": "Country not found",
+                "schema": {
+                    "$ref": "#/definitions/Error"
+                  }
+            }
+          }
+        }
+      },
+      "/covidsummary/summaryGlobal": {
+        "get": {
+          "tags": [
+            "Countries"
+          ],
+          "summary": "Get the global summary of all countries till the current date",
+          "responses": {
+            "200": {
+              "description": "Summary obtained",
+              "schema": {
+                "$ref": "#/definitions/Countries"
+              }
+            },
+            "404": {
+                "description": "Summary not found",
+                "schema": {
+                    "$ref": "#/definitions/Error"
+                  }
+            }
+          }
+        }
+      },
+      "/covid/global/deaths": {
+        "get": {
+          "tags": [
+            "Countries"
+          ],
+          "summary": "Get the global stat of deaths cases till the current date",
+          "responses": {
+            "200": {
+              "description": "Summary obtained",
+              "schema": {
+                "$ref": "#/definitions/Recovered"
+              }
+            },
+            "404": {
+                "description": "Summary not found",
+                "schema": {
+                    "$ref": "#/definitions/Deaths"
+                  }
+            }
+          }
+        }
+      },
+      "/covid/global/recovered": {
+        "get": {
+          "tags": [
+            "Countries"
+          ],
+          "summary": "Get the global stat of recovered cases till the current date",
+          "responses": {
+            "200": {
+              "description": "Summary obtained",
+              "schema": {
+                "$ref": "#/definitions/Recovered"
+              }
+            },
+            "404": {
+                "description": "Summary not found",
+                "schema": {
+                    "$ref": "#/definitions/Error"
+                  }
+            }
+          }
+        }
+      },
+      "/covid/global/confirmed": {
+        "get": {
+          "tags": [
+            "Countries"
+          ],
+          "summary": "Get the global stat of confirmed cases till the current date",
+          "responses": {
+            "200": {
+              "description": "Summary obtained",
+              "schema": {
+                "$ref": "#/definitions/Confirmed"
+              }
+            },
+            "404": {
+                "description": "Summary not found",
+                "schema": {
+                    "$ref": "#/definitions/Error"
+                  }
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+    "Country": {
+        "properties": {
+            "uid": {
+            "type": "string",
+            "uniqueItems": true
+            },
+            "country_iso2": {
+            "type": "string"
+            },
+            "country_iso3": {
+            "type": "string"
+            },
+            "country_code": {
+            "type": "integer"
+            },
+            "state": {
+            "type": "string"
+            },
+            "combined_name": {
+            "type": "string"
+            },
+            "population": {
+            "type": "integer"
+            },
+            "loc": {
+            "type": "object",
+            "properties":{
+                "type": {
+                    "type": "string"
+                },
+                "coordinates": {
+                    "type": "array",
+                    "items":{
+                        "type" : "integer"
+                    }
+                }
+            }	
+            },
+            "date": {
+            "type": "string"
+            },
+            "confirmed": {
+            "type": "integer"
+            },
+            "deaths": {
+            "type": "integer"
+            },
+            "recovered": {
+            "type": "integer"
+            }
+        }
+        },
+      "Countries": {
+        "type": "array",
+        "$ref": "#/definitions/Country"
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+            "message" : {"type" : "string"}
+        }
+      },
+      "Confirmed": {
+        "type": "object",
+        "properties": {
+            "confirmed" : {"type" : "integer"}
+        }
+      },
+      "Deaths": {
+        "type": "object",
+        "properties": {
+            "deaths" : {"type" : "integer"}
+        }
+      },
+      "Recovered": {
+        "type": "object",
+        "properties": {
+            "recovered" : {"type" : "integer"}
+        }
+      }
+    }
+}
