@@ -2,4 +2,3 @@ node_modules/
 .git/
 .gitignore
 npm-debug.log
-client/
