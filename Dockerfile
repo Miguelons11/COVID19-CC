@@ -17,6 +17,7 @@ RUN npm install cors --save
 
 # Bundle app source
 COPY . .
+RUN export GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/apikey.json"
 
 EXPOSE 4000
 CMD ["node","app.js"]
