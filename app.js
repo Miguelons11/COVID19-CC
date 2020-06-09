@@ -11,7 +11,8 @@ const cors = require('cors');
 
 //const apiRouter = require('./routes/index');
 
-const app = express();
+var app = express();
+app.use(express.static('public'));
 //app.use("/",apiRouter)
 
 app.use(cors());
@@ -23,45 +24,273 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
     });
-/*app.use(function(req,res,next){
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, contentType, Content-Type, Accept, Authorization");
-    next();
-});*/
-/*app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Request-Method');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
-    res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
-    next();
-});*/
-/*app.use((req, res, next) => {
-    const origin = req.get('origin');
+
+//configurando el servidor
+var server = app.listen(process.env.PORT || 3000, function () {
+  var port = server.address().port;
+  console.log("aplicación corriendo en el puerto", port);
+  });
   
-    res.header('Access-Control-Allow-Origin', origin);
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma');
+
+
+  const {BigQuery} = require('@google-cloud/bigquery');
   
-    // intercept OPTIONS method
-    if (req.method === 'OPTIONS') {
-      res.sendStatus(204);
-    } else {
-      next();
-    }
-  });*/
 
-
-var swaggerUi = require('swagger-ui-express'),
-    swaggerDocument = require('./swagger.json');
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-//app.use('/', apiRouter);
- 
-const port = process.env.PORT || 4000;
-app.listen(port, () => {
-    console.log(`listening on ${port}`);
-});
-
-module.exports = app;
+  
+  
+  //GET API
+  
+  app.get("/covid/:locationid",async function(req , res){
+  
+    console.log(req.params.locationid);
+  });
+  
+  
+  
+  app.get("/covid/country/:country",async function(req , res){
+      const bigqueryClient = new BigQuery();
+  
+    // The SQL query to run
+    const sqlQuery = `SELECT SUM (confirmed) AS confirmed, SUM (deaths) AS deaths, country_region AS country, date, 46754783 as population, SUM (recovered) AS recovered
+        FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
+        WHERE
+            country_region = "Spain"
+            AND date <= CURRENT_DATE()
+            GROUP BY country, date
+            ORDER BY date ASC;`
+  
+    const options = {
+    query: sqlQuery,
+    // Location must match that of the dataset(s) referenced in the query.
+    location: 'US',
+    };
+  
+    // Run the query
+    const [rows] = await bigqueryClient.query(options);
+  
+    //console.log('Casos:');
+    //rows.forEach(row => console.log(row));
+    return rows;
+    });
+    
+  
+  
+  app.get("/covid/confirmed/:country", async function(){
+      const bigqueryClient = new BigQuery();
+  
+    // The SQL query to run
+    const sqlQuery = `SELECT SUM (confirmed) AS confirmed, country_region AS country, date, 46754783 as population
+        FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
+        WHERE
+            country_region = "Spain"
+            AND date <= CURRENT_DATE()
+            GROUP BY country, date
+            ORDER BY date ASC;`
+  
+    const options = {
+    query: sqlQuery,
+    // Location must match that of the dataset(s) referenced in the query.
+    location: 'US',
+    };
+  
+    // Run the query
+    const [rows] = await bigqueryClient.query(options);
+  
+    //console.log('Casos:');
+    //rows.forEach(row => console.log(row));
+    return rows;
+  });
+  
+  
+  
+  app.get("/covid/recovered/:country", async function(){
+      // Create a client
+    const bigqueryClient = new BigQuery();
+  
+    // The SQL query to run
+    const sqlQuery = `country_region AS country, date, 46754783 as population, SUM (recovered) AS recovered
+        FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
+        WHERE
+            country_region = "Spain"
+            AND date <= CURRENT_DATE()
+            GROUP BY country, date
+            ORDER BY date ASC;`
+  
+    const options = {
+    query: sqlQuery,
+    // Location must match that of the dataset(s) referenced in the query.
+    location: 'US',
+    };
+  
+    // Run the query
+    const [rows] = await bigqueryClient.query(options);
+  
+    //console.log('Casos:');
+    //rows.forEach(row => console.log(row));
+    return rows;
+  });
+  
+  
+  
+  app.get("/covid/death/:country", async function(){
+      // Create a client
+      const bigqueryClient = new BigQuery();
+  
+      // The SQL query to run
+      const sqlQuery = `SUM (deaths) AS deaths, country_region AS country, date, 46754783 as population
+          FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
+          WHERE
+              country_region = "Spain"
+              AND date <= CURRENT_DATE()
+              GROUP BY country, date
+              ORDER BY date ASC;`
+  
+      const options = {
+      query: sqlQuery,
+      // Location must match that of the dataset(s) referenced in the query.
+      location: 'US',
+      };
+  
+      // Run the query
+      const [rows] = await bigqueryClient.query(options);
+  
+      //console.log('Casos:');
+      //rows.forEach(row => console.log(row));
+      return rows;
+  });
+  
+  
+  
+  app.get("/covid/summary/:country", async function(){
+      // Create a client
+    const bigqueryClient = new BigQuery();
+  
+    // The SQL query to run
+    const sqlQuery = `SELECT SUM (confirmed) AS confirmed, SUM (deaths) AS deaths, country_region AS country, date, 46754783 as population, SUM (recovered) AS recovered
+        FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
+        WHERE
+            country_region = "Spain"
+            AND date <= CURRENT_DATE()
+            GROUP BY country, date
+            ORDER BY date ASC;`
+  
+    const options = {
+    query: sqlQuery,
+    // Location must match that of the dataset(s) referenced in the query.
+    location: 'US',
+    };
+  
+    // Run the query
+    const [rows] = await bigqueryClient.query(options);
+  
+    //console.log('Casos:');
+    //rows.forEach(row => console.log(row));
+    return rows;
+  });
+  
+  
+  
+  app.get("/covidsummary/summaryGlobal",async function(){
+      // Create a client
+    const bigqueryClient = new BigQuery();
+  
+    // The SQL query to run
+    const sqlQuery = `SELECT SUM (confirmed) AS confirmed, SUM (deaths) AS deaths, country_region AS country, date, SUM (recovered) AS recovered, 
+        FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
+        WHERE
+            date =  DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY)
+            GROUP BY country, date
+            ORDER BY date ASC;`
+  
+    const options = {
+    query: sqlQuery,
+    // Location must match that of the dataset(s) referenced in the query.
+    location: 'US',
+    };
+  
+    // Run the query
+    const [rows] = await bigqueryClient.query(options);
+  
+    //console.log('Casos:');
+    //rows.forEach(row => console.log(row));
+    return rows;
+  });
+  
+  
+  
+  app.get("/covid/global/deaths",async function(){
+      // Create a client
+    const bigqueryClient = new BigQuery();
+  
+    // The SQL query to run
+    const sqlQuery = `SUM (deaths) AS deaths
+        FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
+        WHERE
+            date <= CURRENT_DATE();`
+  
+    const options = {
+    query: sqlQuery,
+    // Location must match that of the dataset(s) referenced in the query.
+    location: 'US',
+    };
+  
+    // Run the query
+    const [rows] = await bigqueryClient.query(options);
+  
+    //console.log('Casos:');
+    //rows.forEach(row => console.log(row));
+    return rows;
+  });
+  
+  
+  
+  app.get("/covid/global/recovered",async function(){
+      // Create a client
+    const bigqueryClient = new BigQuery();
+  
+    // The SQL query to run
+    const sqlQuery = `SUM (recovered) AS recovered
+        FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
+        WHERE
+            date <= CURRENT_DATE();`
+  
+    const options = {
+    query: sqlQuery,
+    // Location must match that of the dataset(s) referenced in the query.
+    location: 'US',
+    };
+  
+    // Run the query
+    const [rows] = await bigqueryClient.query(options);
+  
+    //console.log('Casos:');
+    //rows.forEach(row => console.log(row));
+    return rows;
+  });
+  
+  app.get("/covid/global/confirmed",async function(){
+      // Create a client
+    const bigqueryClient = new BigQuery();
+  
+    // The SQL query to run
+    const sqlQuery = `SELECT SUM (confirmed) AS confirmed
+        FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
+        WHERE
+            date <= CURRENT_DATE();`
+  
+    const options = {
+    query: sqlQuery,
+    // Location must match that of the dataset(s) referenced in the query.
+    location: 'US',
+    };
+  
+    // Run the query
+    const [rows] = await bigqueryClient.query(options);
+  
+    //console.log('Casos:');
+    //rows.forEach(row => console.log(row));
+    return rows;
+    console.log(rows);
+  });
+  
+  
