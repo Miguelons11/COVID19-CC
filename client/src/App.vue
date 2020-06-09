@@ -7,7 +7,6 @@
         <div class="col-lg-12" style="width=100%">
           <div class="btn-group  btn-group-justified" role="group" aria-label="Basic example">
           <button type="button" class="btn btn-secondary" v-on:click="cambiarVista(0)">Spain</button>
-          <button type="button" class="btn btn-secondary" v-on:click="cambiarVista(1)">Europe</button>
           <button type="button" class="btn btn-secondary" v-on:click="cambiarVista(2)">World</button>
           </div>
         </div>
@@ -34,57 +33,6 @@
             <div class="row col-lg-12">  
               <graficoinfectados  :dataSummary=spain_infectados_array></graficoinfectados>
               <graficomuertos  :muertos=spain_muertos_array :curados=spain_curados_array></graficomuertos>
-            </div>
-            <div class="card col-lg" style="width: 100%; margin-top:20px; background-color: #212020; border: 3px solid #E3E4E5; ">
-                <div class="card-body">
-                  <!--<SpainProvincesMap @mapClick="onMapClick"/>-->
-                </div>
-            </div>
-          </div>
-        </div>
-        <!------------------------------------------------------------------------------------------------------->
-        <!--------------------- CARD EUROPE------------------------------------------------------>
-        <div class="card" style="width: 100%; margin-top:20px;" v-if="europe">
-          <div class="card-body">
-            <h3 class="card-title">EUROPE STATS</h3>
-            <div class="row col-lg-12">  
-              <div class="card col-lg-6" style="width: 100%; margin-top:20px;">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-              </div>
-              <div class="card col-lg-6" style="width: 100%; margin-top:20px;">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-              </div>
-            </div>
-            <div class="row col-lg-12">  
-              <div class="card col-lg-6" style="width: 100%; margin-top:20px;">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-              </div>
-              <div class="card col-lg-6" style="width: 100%; margin-top:20px;">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-              </div>
-            </div>
-            <div class="card col-lg-12" style="width: 100%; margin-top:20px;">
-                <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
             </div>
           </div>
         </div>
@@ -126,29 +74,10 @@
                   defaultCountryFillColor="#dadada"
                    v-if="mapaMuertos"
                   />
-                  <!-- <MapChart
-                  id = "mapa3"
-                  :countryData="global_mapCurados"
-                  highColor="#0F6100"
-                  lowColor="#aaaaaa"
-                  countryStrokeColor="#909090"
-                  defaultCountryFillColor="#dadada"
-                  v-if="mapaCurados"
-                  />
-                  <MapChart
-                  id = "mapa1"
-                  :countryData="global_mapInfectados"
-                  highColor="#007ff0"
-                  lowColor="#d1e9ff"
-                  countryStrokeColor="#909090"
-                  defaultCountryFillColor="#dadada"
-                  v-if="mapaInfectados"
-                  /> -->
                 </div> 
             </div>
           </div>
         </div>
-        <!-------------------------------------------------------------------------------------------------------> 
     </div>
   </div>
 </template>
@@ -169,7 +98,6 @@ export default {
       mensaje : "",
       prueba: [],
       spain: true,
-      europe: false,
       world: false,
       spain_summary : [],
       spain_infectados: 0,
@@ -206,19 +134,19 @@ export default {
       .then(function (response) {
         console.log(response);
         self.spain_summary = response.data;
-        self.spain_fechaResumen = moment(new Date(self.spain_summary[self.spain_summary.length - 1].date)).format("DD/MM/YYYY");
+        self.spain_fechaResumen = moment(new Date(self.spain_summary[self.spain_summary.length - 1].date.value)).format("DD/MM/YYYY");
         response.data.forEach(element => {
-            self.aux.push(element.date);
+            self.aux.push(element.date.value);
             self.aux.push(element.confirmed);
             self.spain_infectados_array.push(self.aux);
             self.aux = [];
             
-            self.aux.push(element.date);
+            self.aux.push(element.date.value);
             self.aux.push(element.recovered);
             self.spain_curados_array.push(self.aux);
             self.aux = [];
 
-            self.aux.push(element.date);
+            self.aux.push(element.date.value);
             self.aux.push(element.deaths);
             self.spain_muertos_array.push(self.aux);
             self.aux = [];
@@ -228,50 +156,47 @@ export default {
 
       axios.get('http://localhost:4000/covid/confirmed/Spain')
       .then(function(response){
-         self.spain_infectados = response.data.confirmed;
+         self.spain_infectados = response.data[0].confirmed;
       });
       axios.get('http://localhost:4000/covid/death/Spain')
       .then(function(response){
-        self.spain_muertos = response.data.deaths;
+        self.spain_muertos = response.data[0].deaths;
       });
       axios.get('http://localhost:4000/covid/recovered/Spain')
       .then(function(response){
-        self.spain_curados = response.data.recovered;
+        self.spain_curados = response.data[0].recovered;
       });
 
       axios.get('http://localhost:4000/covid/global/deaths')
       .then(function(response){
-         self.global_muertos = response.data.deaths;
+         self.global_muertos = response.data[0].deaths;
       });
       axios.get('http://localhost:4000/covid/global/recovered')
       .then(function(response){
-        self.global_curados = response.data.recovered;
+        self.global_curados = response.data[0].recovered;
       });
       axios.get('http://localhost:4000/covid/global/confirmed')
       .then(function(response){
-        self.global_infectados = response.data.confirmed;
+        self.global_infectados = response.data[0].confirmed;
       });
 
        axios.get('http://localhost:4000/covidsummary/summaryGlobal')
       .then(function (response) {
        
+       console.log(response.data);
         self.global_summary = response.data;
-        self.fecha_global = self.global_summary[0].date;
+        self.fecha_global = self.global_summary[0].date.value;
 
         self.global_summary.map(function(element){
-          if(element.country == "France"){
-            self.global_mapMuertos["FR"] = element.deaths;
-            self.global_mapCurados["FR"] = element.recovered;
-            self.global_mapInfectados["FR"] = element.confirmed;
+          if(element.country == "US"){
+            self.global_mapMuertos["US"] = element.deaths;
+            self.global_mapCurados["US"] = element.recovered;
+            self.global_mapInfectados["US"] = element.confirmed;
 
-          }else if(element.country == "United Kingdom"){
-            self.global_mapMuertos["GB"] = element.deaths;
-            self.global_mapCurados["GB"] = element.recovered;
-            self.global_mapInfectados["GB"] = element.confirmed;
           }else {
-            self.global_mapMuertos[element.country_iso2s[0]] = element.deaths;
-            self.global_mapCurados[element.country_iso2s[0]] = element.recovered;
-            self.global_mapInfectados[element.country_iso2s[0]] = element.confirmed;
+            self.global_mapMuertos[element.country_iso2s] = element.deaths;
+            self.global_mapCurados[element.country_iso2s] = element.recovered;
+            self.global_mapInfectados[element.country_iso2s] = element.confirmed;
           }
         });
       });
@@ -282,42 +207,13 @@ export default {
       var self = this;
       if(n==0){
         self.spain = true;
-        self.europe = false;
         self.world = false;      
-      }
-      else if(n==1){
-        self.spain = false;
-        self.europe = true;
-        self.world = false;
       }else{
         self.spain = false;
-        self.europe = false;
         self.world = true;
       }
     },
-    cambiarMapa : function(n){
-      var self = this;
-      if(n==0){
-        self.mapaMuertos = true;
-        self.mapaCurados = false;
-        self.mapaInfectados = false;      
-      }
-      else if(n==1){
-        self.mapaMuertos = false;
-        self.mapaCurados = true;
-        self.mapaInfectados = false;
-      }else{
-        self.mapaMuertos = false;
-        self.mapaCurados = false;
-        self.mapaInfectados = true;
-      }
-    },
-    onMapClick(e) {      
-      console.log(e.title);
-    }
   },
-   computed: {
-     }
 }
 </script>
 
