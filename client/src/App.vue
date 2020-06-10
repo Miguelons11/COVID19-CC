@@ -130,7 +130,7 @@ export default {
   },
   created(){
     var self = this;
-    axios.get('http://localhost:4000/covid/summary/Spain')
+    axios.get('http://34.71.36.68:4000/covid/summary/Spain')
       .then(function (response) {
         console.log(response);
         self.spain_summary = response.data;
@@ -154,33 +154,33 @@ export default {
         });
       });
 
-      axios.get('http://localhost:4000/covid/confirmed/Spain')
+      axios.get('http://34.71.36.68:4000/covid/confirmed/Spain')
       .then(function(response){
          self.spain_infectados = response.data[0].confirmed;
       });
-      axios.get('http://localhost:4000/covid/death/Spain')
+      axios.get('http://34.71.36.68:4000/covid/death/Spain')
       .then(function(response){
         self.spain_muertos = response.data[0].deaths;
       });
-      axios.get('http://localhost:4000/covid/recovered/Spain')
+      axios.get('http://34.71.36.68:4000/covid/recovered/Spain')
       .then(function(response){
         self.spain_curados = response.data[0].recovered;
       });
 
-      axios.get('http://localhost:4000/covid/global/deaths')
+      axios.get('http://34.71.36.68:4000/covid/global/deaths')
       .then(function(response){
          self.global_muertos = response.data[0].deaths;
       });
-      axios.get('http://localhost:4000/covid/global/recovered')
+      axios.get('http://34.71.36.68:4000/covid/global/recovered')
       .then(function(response){
         self.global_curados = response.data[0].recovered;
       });
-      axios.get('http://localhost:4000/covid/global/confirmed')
+      axios.get('http://34.71.36.68:4000/covid/global/confirmed')
       .then(function(response){
         self.global_infectados = response.data[0].confirmed;
       });
 
-       axios.get('http://localhost:4000/covidsummary/summaryGlobal')
+       axios.get('http://34.71.36.68:4000/covidsummary/summaryGlobal')
       .then(function (response) {
        
        console.log(response.data);

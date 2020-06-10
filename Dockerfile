@@ -1,4 +1,5 @@
-FROM node:10-alpine
+#FROM node:10-alpine
+FROM node:10.15.0
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -17,6 +18,7 @@ RUN npm install cors --save
 
 # Bundle app source
 COPY . .
+#ENV GOOGLE_APPLICATION_CREDENTIALS="/usr/src/app/apikey.json"
 
 EXPOSE 4000
 CMD ["node","app.js"]
