@@ -16,7 +16,6 @@ router.get('/covid/global/confirmed', controlador.readGlobalConfirmed);
 
 
 
-
 module.exports = router;*/
 
 const express = require('express');
