@@ -6,7 +6,7 @@
         </div>
         <div class="col-lg-12" style="width=100%">
           <div class="btn-group  btn-group-justified" role="group" aria-label="Basic example">
-          <button type="button" class="btn btn-secondary" v-on:click="cambiarVista(0)">Spain</button>
+          <button type="button" class="btn btn-secondary" v-on:click="cambiarVista(0)">PRUEBA</button>
           <button type="button" class="btn btn-secondary" v-on:click="cambiarVista(2)">World</button>
           </div>
         </div>
