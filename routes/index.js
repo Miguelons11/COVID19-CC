@@ -14,6 +14,7 @@ router.get('/covid/global/deaths', controlador.readGlobalDeaths);
 router.get('/covid/global/recovered', controlador.readGlobalRecovered);
 router.get('/covid/global/confirmed', controlador.readGlobalConfirmed);
 
+
 module.exports = router;*/
 
 const express = require('express');
