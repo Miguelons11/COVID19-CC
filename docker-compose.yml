@@ -9,9 +9,12 @@ services:
       - GOOGLE_APPLICATION_CREDENTIALS=/tmp/keys/apikey.json
     ports:
        - "4000:4000"
+    restart: always
+    
   app:
     image: gcr.io/cnsa2020-jrz899/covidapp:1.0
     container_name: covidapp-container
     ports:
        - "80:8080"
+    restart: always
 
