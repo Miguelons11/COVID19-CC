@@ -55,7 +55,7 @@ app.get("/covid/country/:country", async function (req, res) {
         FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
         WHERE
             country_region = "Spain"
-            AND date <= CURRENT_DATE()
+            AND date <= DATE_SUB(CURRENT_DATE("-06"), INTERVAL 1 DAY)
             GROUP BY country, date
             ORDER BY date ASC;`
 
@@ -88,7 +88,7 @@ app.get("/covid/confirmed/:country", async function (req, res) {
       FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
       WHERE
         country_region = "Spain"
-        and date =  DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY);`
+        and date =  DATE_SUB(CURRENT_DATE("-06"), INTERVAL 1 DAY);`
 
   const options = {
     query: sqlQuery,
@@ -116,7 +116,7 @@ app.get("/covid/recovered/:country", async function (req, res) {
   FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
   WHERE
     country_region = "Spain"
-    and date =  DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY);`
+    and date =  DATE_SUB(CURRENT_DATE("-06"), INTERVAL 1 DAY);`
 
   const options = {
     query: sqlQuery,
@@ -144,7 +144,7 @@ app.get("/covid/death/:country", async function (req, res) {
     FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
     WHERE
       country_region = "Spain"
-      and date =  DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY);`
+      and date =  DATE_SUB(CURRENT_DATE("-06"), INTERVAL 1 DAY);`
 
   const options = {
     query: sqlQuery,
@@ -171,7 +171,7 @@ app.get("/covid/summary/:country", async function (req, res) {
         FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
         WHERE
             country_region = "Spain"
-            AND date <= CURRENT_DATE()
+            AND date <= DATE_SUB(CURRENT_DATE("-06"), INTERVAL 1 DAY)
             GROUP BY country, date
             ORDER BY date ASC;`
 
@@ -200,7 +200,7 @@ app.get("/covidsummary/summaryGlobal", async function (req, res) {
   FROM \`bigquery-public-data.covid19_jhu_csse.summary\` jh
   LEFT JOIN \`bigquery-public-data.utility_us.country_code_iso\` cn ON cn.country_name = jh.country_region
   WHERE
-      date =  DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY)
+      date =  DATE_SUB(CURRENT_DATE("-06"), INTERVAL 1 DAY)
       GROUP BY country, date, country_iso2s;`
 
   const options = {
@@ -227,7 +227,7 @@ app.get("/covid/global/deaths", async function (req, res) {
   const sqlQuery = `SELECT SUM (deaths) AS deaths
         FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
         WHERE
-        date =  DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY);`
+        date =  DATE_SUB(CURRENT_DATE("-06"), INTERVAL 1 DAY);`
 
   const options = {
     query: sqlQuery,
@@ -253,7 +253,7 @@ app.get("/covid/global/recovered", async function (req, res) {
   const sqlQuery = `SELECT SUM (recovered) AS recovered
         FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
         WHERE
-        date =  DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY);`
+        date =  DATE_SUB(CURRENT_DATE("-06"), INTERVAL 1 DAY);`
 
   const options = {
     query: sqlQuery,
@@ -277,7 +277,7 @@ app.get("/covid/global/confirmed", async function (req, res) {
   const sqlQuery = `SELECT SUM (confirmed) AS confirmed
         FROM \`bigquery-public-data.covid19_jhu_csse.summary\`
         WHERE
-        date =  DATE_SUB(CURRENT_DATE, INTERVAL 1 DAY);`
+        date =  DATE_SUB(CURRENT_DATE("-06"), INTERVAL 1 DAY);`
 
   const options = {
     query: sqlQuery,
